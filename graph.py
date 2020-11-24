@@ -12,8 +12,13 @@ class Vertex:
     def get_connections(self):
         return self.adjacent  
 
+    def remove_connection(self, other):
+        if other in self.adjacent:
+            self.adjacent.remove(other)
+
     def get_id(self):
         return self.id
+
 
 class Graph:
     def __init__(self):
@@ -34,6 +39,12 @@ class Graph:
             return self.vert_dict[n]
         else:
             return None
+
+    def remove_edge(self, frm, to):
+        frm_obj = self.vert_dict[frm]
+        to_obj = self.vert_dict[to]
+        frm_obj.remove_connection(to_obj)
+        to_obj.remove_connection(frm_obj)
 
     def add_edge(self, frm, to):
         if frm not in self.vert_dict:
