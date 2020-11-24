@@ -5,7 +5,7 @@ graph code courtesy of https://www.bogotobogo.com/python/python_graph_data_struc
 
 from graph import Graph
 import visualize
-from copy import deepcopy
+from random import shuffle
 
 def createGrid(width, height) -> int:#do more with this
 
@@ -20,33 +20,39 @@ def createGrid(width, height) -> int:#do more with this
 
 def destructiveDfs(graph, startVertex):
     visited = set()
-    toRemove = set()
+    removed = Graph()
     vertex_obj = graph.get_vertex(startVertex)
-    destructiveDfsUtil(graph, vertex_obj, visited, toRemove)
-    return toRemove
+    destructiveDfsUtil(graph, vertex_obj, visited, removed)
+    return removed
 
-def destructiveDfsUtil(graph, nextVertex, visited, toRemove):
+def destructiveDfsUtil(graph, nextVertex, visited, removed):
     visited.add(nextVertex)
-    for neighbor in nextVertex.get_connections():
+    allNeighbors = list(nextVertex.get_connections())
+    shuffle(allNeighbors)
+
+    for neighbor in allNeighbors:
         if neighbor not in visited:
             #print(neighbor)
             #nextVertex.remove_connection(neighbor)
-            toRemove.add((nextVertex.get_id(), neighbor.get_id()))
-            destructiveDfsUtil(graph, neighbor, visited, toRemove)
+            removed.add_edge(nextVertex.get_id(), neighbor.get_id())
+            destructiveDfsUtil(graph, neighbor, visited, removed)
 
 def nowDestroy(graph, toDestroy):
     for ptPair in toDestroy:
         graph.remove_edge(ptPair[0], ptPair[1])
 
 def main():
-    aslk= createGrid(5,5)
+    WIDTH = 30
+    HEIGHT = 15
+
+    aslk= createGrid(WIDTH,HEIGHT)
     #visualize.display(aslk, 5,5)
     #print(aslk.get_vertices())
     res = destructiveDfs(aslk, (0,0))
-    nowDestroy(aslk, res)
+    #nowDestroy(aslk, res)
 
     #print(res)
-    visualize.display(aslk)
+    visualize.display(res, WIDTH, HEIGHT)
 
 
 if __name__ == "__main__":
