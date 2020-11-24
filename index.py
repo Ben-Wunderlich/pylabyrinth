@@ -5,7 +5,7 @@ graph code courtesy of https://www.bogotobogo.com/python/python_graph_data_struc
 
 from graph import Graph
 import visualize
-from random import shuffle
+from random import shuffle, randint
 
 def createGrid(width, height) -> int:#do more with this
 
@@ -32,27 +32,69 @@ def destructiveDfsUtil(graph, nextVertex, visited, removed):
 
     for neighbor in allNeighbors:
         if neighbor not in visited:
-            #print(neighbor)
-            #nextVertex.remove_connection(neighbor)
             removed.add_edge(nextVertex.get_id(), neighbor.get_id())
             destructiveDfsUtil(graph, neighbor, visited, removed)
 
-def nowDestroy(graph, toDestroy):
-    for ptPair in toDestroy:
-        graph.remove_edge(ptPair[0], ptPair[1])
+def markCount(vertex1, vertex2, marked):
+    i=0
+    if vertex1.get_id() in marked:
+        i+=1
+    if vertex2.get_id() in marked:
+        i+=1
+    return i
+
+def primMaze(graph, width, height):
+    #XXX do this sometime
+    # refer to https://en.wikipedia.org/wiki/Maze_generation_algorithm
+
+    traversed = Graph()
+
+    start = (randint(0, width-1),randint(0, height-1))
+    marked = set()
+    marked.add(start)
+    neighbors = graph.get_vertex(start).get_connections()
+    while len(neighbors) > 0:
+        #print("I run")
+        picked = neighbors.pop()
+        for newNeighbor in picked.get_connections():
+            if markCount(picked, newNeighbor, marked) == 1:
+                traversed.add_edge(picked.get_id(), newNeighbor.get_id())
+                neighbors.update(picked.get_connections())
+                #print(neighbors)
+                #print(picked.get_connections())
+                break#XXX try removing this, see what happens
+        marked.add(picked.get_id())
+    
+    return traversed
+
+
+
+def aldousBroder(graph, width, height):
+    #also do this sometime
+    # refer to https://en.wikipedia.org/wiki/Maze_generation_algorithm
+    currCell = (randint(0, width-1),randint(0, height-1))
+    visited = set()
+    visited.add(currCell)
+    unvisited = set(graph.get_vertices())
+
+    while len(unvisited) > 0:
+        pass
+
+
 
 def main():
-    WIDTH = 30
-    HEIGHT = 15
+    #40x40 is pretty good
+    WIDTH = 40
+    HEIGHT = 40
 
     aslk= createGrid(WIDTH,HEIGHT)
     #visualize.display(aslk, 5,5)
     #print(aslk.get_vertices())
-    res = destructiveDfs(aslk, (0,0))
-    #nowDestroy(aslk, res)
+    pathes = primMaze(aslk, WIDTH, HEIGHT)
 
+    #res = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
     #print(res)
-    visualize.display(res, WIDTH, HEIGHT)
+    visualize.display(pathes, WIDTH, HEIGHT)
 
 
 if __name__ == "__main__":
