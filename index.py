@@ -41,28 +41,38 @@ def markCount(vertex1, vertex2, marked):
         i+=1
     if vertex2.get_id() in marked:
         i+=1
+
+    '''if vertex1 not in vertex2.get_connections():
+        return -1'''
+    
     return i
 
 def primMaze(graph, width, height):
-    #XXX do this sometime
     # refer to https://en.wikipedia.org/wiki/Maze_generation_algorithm
 
     traversed = Graph()
 
-    start = (randint(0, width-1),randint(0, height-1))
-    marked = set()
-    marked.add(start)
+    #start = (width//2,height//2)
+    start = (width//2,0)
+    marked = set([start])
+    startvert =graph.get_vertex(start)
     neighbors = graph.get_vertex(start).get_connections()
     while len(neighbors) > 0:
         #print("I run")
         picked = neighbors.pop()
+
+        #allNeighbors = list(picked.get_connections())
+        #shuffle(allNeighbors)
+
         for newNeighbor in picked.get_connections():
             if markCount(picked, newNeighbor, marked) == 1:
                 traversed.add_edge(picked.get_id(), newNeighbor.get_id())
                 neighbors.update(picked.get_connections())
-                #print(neighbors)
-                #print(picked.get_connections())
-                break#XXX try removing this, see what happens
+                if startvert in neighbors:#XXX why does it need
+                    print("kill is")
+                    neighbors.remove(startvert)#bug fixing
+                break
+        #neighbors.update(picked.get_connections())
         marked.add(picked.get_id())
     
     return traversed
@@ -84,16 +94,15 @@ def aldousBroder(graph, width, height):
 
 def main():
     #40x40 is pretty good
-    WIDTH = 40
-    HEIGHT = 40
+    WIDTH = 50
+    HEIGHT = 50
 
     aslk= createGrid(WIDTH,HEIGHT)
-    #visualize.display(aslk, 5,5)
     #print(aslk.get_vertices())
     pathes = primMaze(aslk, WIDTH, HEIGHT)
+    #pathes = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
 
-    #res = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
-    #print(res)
+    #pathes = aslk
     visualize.display(pathes, WIDTH, HEIGHT)
 
 
