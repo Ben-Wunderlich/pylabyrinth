@@ -5,7 +5,8 @@ graph code courtesy of https://www.bogotobogo.com/python/python_graph_data_struc
 
 from graph import Graph
 import visualize
-from random import shuffle, randint
+from disjoint import DisjointKringle
+from random import shuffle, randint, choice
 
 def createGrid(width, height) -> int:#do more with this
 
@@ -77,7 +78,38 @@ def primMaze(graph, width, height):
     
     return traversed
 
+def nonPuzzle(graph):
+    #marked=set()
+    unvisited = set(graph.get_vertices())
+    difference = Graph()
 
+    while(len(unvisited) > 0):
+        vertex = graph.get_vertex(unvisited.pop())
+
+        neighbor = choice(list(vertex.get_connections()))
+        difference.add_edge(neighbor.get_id(), vertex.get_id())
+    return difference
+
+def krisKringle(graph):
+    CHAOS_CHANCE = 100 #means 1 in 100 chance of not following rules, could be a very bad idea
+
+    unvisited = list(graph.get_vertices())
+    disj = DisjointKringle(unvisited)
+    difference = Graph()
+
+    while(disj.numSets() > 1):
+        vertex = choice(unvisited)
+        vert_ob = graph.get_vertex(vertex)
+
+        for neighbor in vert_ob.get_connections():
+            neigh_name = neighbor.get_id()
+
+            flukeIncident =  randint(0,CHAOS_CHANCE)==0
+            if not disj.areBros(neigh_name, vertex) or flukeIncident:
+                difference.add_edge(neigh_name, vertex)
+                disj.union(neigh_name, vertex)
+                break
+    return difference
 
 def aldousBroder(graph, width, height):
     #also do this sometime
@@ -94,14 +126,14 @@ def aldousBroder(graph, width, height):
 
 def main():
     #40x40 is pretty good
-    WIDTH = 50
-    HEIGHT = 50
+    WIDTH = 40
+    HEIGHT = 40
 
     aslk= createGrid(WIDTH,HEIGHT)
-    #print(aslk.get_vertices())
-    pathes = primMaze(aslk, WIDTH, HEIGHT)
-    #pathes = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
 
+    #pathes = primMaze(aslk, WIDTH, HEIGHT)
+    #pathes = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
+    pathes = krisKringle(aslk)
     #pathes = aslk
     visualize.display(pathes, WIDTH, HEIGHT)
 
