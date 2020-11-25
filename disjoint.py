@@ -1,3 +1,7 @@
+"""
+This isn't my best algorithm but it has O(1) comparisons which happen a lot.
+Unions are O(n), but it is ok for less than 1000 sets 
+"""
 
 class DisjointKringle:
     def __init__(self, startelems):
