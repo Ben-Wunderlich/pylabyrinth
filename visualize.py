@@ -3,7 +3,7 @@ from tkinter import *
 master = Tk()
 
 #CIRCE_WIDTH = 4
-expand=offset=line_width=-1
+expand=offset=line_width= half_width=-1
 
 def makeNode(w,x,y):
     x+=offset
@@ -13,13 +13,21 @@ def makeNode(w,x,y):
 def makeConnection(w, p1, p2):
     p1 = (p1[0]*expand+offset, p1[1]*expand+offset)
     p2 = (p2[0]*expand+offset, p2[1]*expand+offset)
-    w.create_line(p1[0], p1[1], p2[0], p2[1], width=line_width, fill="#B5DDFF")
+    #w.create_line(p1[0]+half_width, p1[1]+half_width, p2[0], p2[1], width=line_width, fill="#B5DDFF")
+    #it looks really cool if you use above line
+
+    if(p1[0] == p2[0]):
+        w.create_line(p1[0], p1[1]-half_width, p2[0], p2[1]+half_width, width=line_width, fill="#B5DDFF")
+    else:
+        w.create_line(p1[0]-half_width, p1[1], p2[0]+half_width, p2[1], width=line_width, fill="#B5DDFF")
+
 
 def updateExpand(newExpand):
-    global expand, offset, line_width
+    global expand, offset, line_width, half_width
     expand = newExpand
     offset = newExpand
     line_width = int(expand*0.6)
+    half_width = line_width//2
 
 
 def display(graph, x, y, newExpand):
