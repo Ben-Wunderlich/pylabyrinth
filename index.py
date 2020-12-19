@@ -84,7 +84,7 @@ def primMaze(graph, width, height):
 '''looks cool and is hard to solve because it is fairly unpredictable, takes a while to compute'''
 def krisKringle(graph, use_chaos=True, chaos_chance=100):
 
-    chaos_start = int(not use_chaos)
+    chaos_start = int(not use_chaos)#think carefully about this, its kinda wack
 
     unvisited = list(graph.get_vertices())
     disj = DisjointKringle(unvisited)
@@ -125,6 +125,7 @@ should deterministically create an exit to another section
 however it doesnt always give the same results.
 I am thinking it might be a good idea just to make a custom hash function for it
 '''
+#this does not work as is, does not give consistent values
 def makeExits(graph, width, height):
     noisey = PerlinNoise()
     width = (width)/pi
@@ -146,19 +147,18 @@ def makeExits(graph, width, height):
 
 def main():
     #40x40 is pretty good
-    WIDTH = 10
-    HEIGHT = 10
-    EXPAND = 50
+    WIDTH = 80
+    HEIGHT = 40
+    EXPAND = 20
 
     aslk= createGrid(WIDTH,HEIGHT)
 
     start = timeit.default_timer()
 
-    pathes = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
+    #pathes = destructiveDfs(aslk, (randint(0, WIDTH-1),randint(0, HEIGHT-1)))
     #pathes = primMaze(aslk, WIDTH, HEIGHT)
-    #pathes = krisKringle(aslk, True)
+    pathes = krisKringle(aslk, False)
 
-    #pathes = aslk
     stop = timeit.default_timer()
     print('Calculations took: {}s'.format(round((stop - start)*10000)/10000))
 

@@ -2,6 +2,11 @@ from tkinter import *
 
 master = Tk()
 
+colour = {"line":"#B5DDFF", "bg":"#7414FA"}#blue and white
+#colour = {"line":"#E1CC6E", "bg":"#5C532D"}#sandstone
+#colour = {"line":"#E17948", "bg":"#A83904"}#fire
+#colour = {"line":"#5A90E1", "bg":"#3C4B61"}#ocean
+
 #CIRCE_WIDTH = 4
 expand=offset=line_width= half_width=-1
 
@@ -17,9 +22,9 @@ def makeConnection(w, p1, p2):
     #it looks really cool if you use above line
 
     if(p1[0] == p2[0]):
-        w.create_line(p1[0], p1[1]-half_width, p2[0], p2[1]+half_width, width=line_width, fill="#B5DDFF")
+        w.create_line(p1[0], p1[1]-half_width, p2[0], p2[1]+half_width, width=line_width, fill=colour["line"])
     else:
-        w.create_line(p1[0]-half_width, p1[1], p2[0]+half_width, p2[1], width=line_width, fill="#B5DDFF")
+        w.create_line(p1[0]-half_width, p1[1], p2[0]+half_width, p2[1], width=line_width, fill=colour["line"])
 
 
 def updateExpand(newExpand):
@@ -37,7 +42,7 @@ def display(graph, x, y, newExpand):
     w = Canvas(master, 
             width=canvas_width+offset*2,
             height=canvas_height+offset*2)
-    w.configure(bg='#7414FA')
+    w.configure(bg=colour["bg"])
     w.pack()
 
     allVertices = graph.get_vertices()
